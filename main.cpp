@@ -8,5 +8,5 @@ int main(int argc, char **argv) {
     MainWindow mw;
     mw.show();
 
-    app.exec();
+    return app.exec();
 }
