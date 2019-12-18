@@ -1,0 +1,12 @@
+# keep clion's project files away
+.idea
+# ignore cmake build directories from clion
+cmake-*
+# ignore products
+*.o
+*.a
+*.obj
+*.exe
+*.dll
+*.lib
+
