@@ -15,19 +15,20 @@
 
 RenderWindow::RenderWindow(QSize size):
     QMdiSubWindow(),
-    CanvasBacking(size),
+    CanvasBacking(size, QImage::Format::Format_RGB888),
     Canvas(),
     imageLabel()
 {
     totalTime = 0;
     CanvasBacking.fill(QColor("darkGray"));
 
-    imageLabel.setPixmap(CanvasBacking);
+    imageLabel.setPixmap(QPixmap::fromImage(CanvasBacking));
     imageLabel.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
 
     auto *scrollArea = new QScrollArea(this);
     scrollArea->setWidget(&imageLabel);
     setWidget(scrollArea);
+
 }
 
 void RenderWindow::SaveAs() {
@@ -39,8 +40,7 @@ void RenderWindow::SaveAs() {
     if (filename.isEmpty()) {
         return;
     }
-    auto qi(CanvasBacking.toImage());
-    auto didSave = qi.save(filename);
+    auto didSave = CanvasBacking.save(filename);
     if (!didSave) {
         QMessageBox error(QMessageBox::Icon::Critical, tr("Save As..."),
             tr("An error occurred whilst saving the file \"%1\".").arg(filename));
@@ -80,10 +80,7 @@ void RenderWindow::RenderStart() {
 void
 RenderWindow::setPixel(int x, int y, int r, int g, int b)
 {
-    Canvas.begin(&CanvasBacking);
-    Canvas.setPen(QColor(r, g, b));
-    Canvas.drawPoint(x, y);
-    Canvas.end();
+    CanvasBacking.setPixelColor(x, y, QColor(r,g,b));
 }
 
 void RenderWindow::RenderPause() {
@@ -127,5 +124,5 @@ RenderWindow::setStatus(const QString &newStatus) {
 void
 RenderWindow::scheduleRedraw()
 {
-    imageLabel.setPixmap(CanvasBacking);
+    imageLabel.setPixmap(QPixmap::fromImage(CanvasBacking));
 }

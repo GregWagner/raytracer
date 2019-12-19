@@ -22,7 +22,7 @@ Q_OBJECT
 public:
     RenderWindow(QSize size);
 
-    QPixmap CanvasBacking;
+    QImage CanvasBacking;
     QPainter Canvas;
 
     QString getStatus() const;
