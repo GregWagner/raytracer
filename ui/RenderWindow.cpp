@@ -19,6 +19,7 @@ RenderWindow::RenderWindow() :
     Canvas(),
     imageLabel()
 {
+
     totalTime = 0;
 
     imageLabel.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
@@ -141,4 +142,8 @@ RenderWindow::scheduleRedraw()
     } else {
         imageLabel.clear();
     }
+}
+
+QSize RenderWindow::sizeHint() const {
+    return {400, 400};
 }

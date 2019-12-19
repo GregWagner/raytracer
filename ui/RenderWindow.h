@@ -25,6 +25,8 @@ public:
     QSharedPointer<QImage> CanvasBacking;
     QPainter Canvas;
 
+    QSize sizeHint() const override;
+
     QString getStatus() const;
 
 public slots:
