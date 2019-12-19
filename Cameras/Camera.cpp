@@ -5,7 +5,7 @@
 
 // ----------------------------------------------------------------- default constructor
 
-Camera::Camera(void)		
+Camera::Camera()
 	:	eye(0, 0, 500),
 		lookat(0),
 		ra(0),
@@ -54,7 +54,7 @@ Camera::operator= (const Camera& rhs) {
 
 // ----------------------------------------------------------------- destructor
 
-Camera::~Camera(void) {}
+Camera::~Camera() {}
 
 
 
@@ -63,7 +63,7 @@ Camera::~Camera(void) {}
 // This computes an orthornormal basis given the view point, lookat point, and up vector
 
 void
-Camera::compute_uvw(void) {
+Camera::compute_uvw() {
 	w = eye - lookat;
 	w.normalize();
 	u = up ^ w; 

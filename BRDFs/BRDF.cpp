@@ -6,7 +6,7 @@
 
 // ---------------------------------------------------------- default constructor
 
-BRDF::BRDF(void) {}
+BRDF::BRDF() {}
 
 
 BRDF::BRDF(const BRDF& brdf) {}	
@@ -26,7 +26,7 @@ BRDF::operator= (const BRDF& rhs) {
 
 // ---------------------------------------------------------- destructor
 
-BRDF::~BRDF(void) {}  
+BRDF::~BRDF() {}
 
 
 // ------------------------------------------------------------------------ f

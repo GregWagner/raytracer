@@ -12,14 +12,14 @@
 class BRDF {
 	public:
 	
-		BRDF(void);						
+		BRDF();
 		
 		BRDF(const BRDF& object);
 		
 		virtual BRDF*
-		clone(void) const = 0;
+		clone() const = 0;
 		
-		~BRDF(void);
+		~BRDF();
 								
 		virtual RGBColor
 		f(const ShadeRec& sr, const Vector3D& wo, const Vector3D& wi) const;
