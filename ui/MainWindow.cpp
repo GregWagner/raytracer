@@ -40,7 +40,7 @@ MainWindow::MainWindow():
 void
 MainWindow::FileNew()
 {
-    auto *subWindow = new RenderWindow(QSize(640,480));
+    auto *subWindow = new RenderWindow();
     MdiArea.addSubWindow(subWindow);
     subWindow->show();
 }

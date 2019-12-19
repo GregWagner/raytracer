@@ -13,39 +13,41 @@
 
 #include "RenderThread.h"
 
-RenderWindow::RenderWindow(QSize size):
+RenderWindow::RenderWindow() :
     QMdiSubWindow(),
-    CanvasBacking(size, QImage::Format::Format_RGB888),
+    CanvasBacking(),
     Canvas(),
     imageLabel()
 {
     totalTime = 0;
-    CanvasBacking.fill(QColor("darkGray"));
 
-    imageLabel.setPixmap(QPixmap::fromImage(CanvasBacking));
     imageLabel.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
 
     auto *scrollArea = new QScrollArea(this);
     scrollArea->setWidget(&imageLabel);
     setWidget(scrollArea);
-
 }
 
 void RenderWindow::SaveAs() {
-
-    auto filename = QFileDialog::getSaveFileName(this,
-        tr("Save Image As..."),
-        "",
-        tr("Windows Bitmap (*.bmp);;JPEG Image (*.jpeg);;Portable Network Graphics (*.png);;Portable Pixmap (*.ppm)"));
-    if (filename.isEmpty()) {
-        return;
-    }
-    auto didSave = CanvasBacking.save(filename);
-    if (!didSave) {
+    if (CanvasBacking) {
+        auto filename = QFileDialog::getSaveFileName(this,
+                                                     tr("Save Image As..."),
+                                                     "",
+                                                     tr("Windows Bitmap (*.bmp);;JPEG Image (*.jpeg);;Portable Network Graphics (*.png);;Portable Pixmap (*.ppm)"));
+        if (filename.isEmpty()) {
+            return;
+        }
+        auto didSave = CanvasBacking->save(filename);
+        if (!didSave) {
+            QMessageBox error(QMessageBox::Icon::Critical, tr("Save As..."),
+                              tr("An error occurred whilst saving the file \"%1\".").arg(filename));
+            error.exec();
+            return;
+        }
+    } else {
         QMessageBox error(QMessageBox::Icon::Critical, tr("Save As..."),
-            tr("An error occurred whilst saving the file \"%1\".").arg(filename));
+                          tr("There's no image to save."));
         error.exec();
-        return;
     }
 }
 
@@ -55,14 +57,13 @@ void RenderWindow::RenderStart() {
     setStatus(tr("Building world..."));
     theWorld->build();
 
+    setStatus(tr("Creating Canvas..."));
+    newBackingImage(theWorld->vp.hres, theWorld->vp.vres);
+
     setStatus(tr("Rendering..."));
 
     pixelsRendered = 0;
-    pixelsToRender = CanvasBacking.width() * CanvasBacking.height();
-
-    //set the background
-    CanvasBacking.fill(QColor("darkGray"));
-    scheduleRedraw();
+    pixelsToRender = CanvasBacking->width() * CanvasBacking->height();
 
     updateTimer.setInterval(250);
     connect(&updateTimer, &QTimer::timeout, this, &RenderWindow::updateEvent);
@@ -77,10 +78,19 @@ void RenderWindow::RenderStart() {
     renderThread->start(QThread::Priority::LowPriority);
 }
 
+void RenderWindow::newBackingImage(int width, int height) {
+    CanvasBacking = QSharedPointer<QImage>::create(width, height, QImage::Format_RGB888);
+    CanvasBacking->fill(QColor("darkGray"));
+    scheduleRedraw();
+}
+
 void
 RenderWindow::setPixel(int x, int y, int r, int g, int b)
 {
-    CanvasBacking.setPixelColor(x, y, QColor(r,g,b));
+    if (CanvasBacking) {
+        CanvasBacking->setPixelColor(x, y, QColor(r, g, b));
+        pixelsRendered++;
+    }
 }
 
 void RenderWindow::RenderPause() {
@@ -94,6 +104,7 @@ RenderWindow::renderComplete()
     updateTimer.stop();
     totalTime += timer.elapsed();
 
+    disconnect(renderThread, nullptr, nullptr, nullptr);
     delete renderThread;
     renderThread = nullptr;
 
@@ -124,5 +135,10 @@ RenderWindow::setStatus(const QString &newStatus) {
 void
 RenderWindow::scheduleRedraw()
 {
-    imageLabel.setPixmap(QPixmap::fromImage(CanvasBacking));
+    if (CanvasBacking) {
+        imageLabel.setPixmap(QPixmap::fromImage(*CanvasBacking));
+        imageLabel.resize(CanvasBacking->size());
+    } else {
+        imageLabel.clear();
+    }
 }

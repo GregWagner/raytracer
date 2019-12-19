@@ -20,9 +20,9 @@
 class RenderWindow : public QMdiSubWindow {
 Q_OBJECT
 public:
-    RenderWindow(QSize size);
+    RenderWindow();
 
-    QImage CanvasBacking;
+    QSharedPointer<QImage> CanvasBacking;
     QPainter Canvas;
 
     QString getStatus() const;
@@ -63,6 +63,8 @@ protected:
     std::shared_ptr<World>   theWorld;
 
     void setStatus(const QString &newStatus);
+
+    void newBackingImage(int width, int height);
 };
 
 
