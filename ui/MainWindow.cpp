@@ -35,6 +35,8 @@ MainWindow::MainWindow():
     auto *sb = statusBar();
 
     connect(&MdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::focusSubWindow);
+
+    FileNew();
 }
 
 void
