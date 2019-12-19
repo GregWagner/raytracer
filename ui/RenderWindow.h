@@ -11,6 +11,7 @@
 #include <QThread>
 #include <QElapsedTimer>
 #include <QTimer>
+#include <QPainter>
 
 #include <memory>
 
@@ -21,11 +22,18 @@ Q_OBJECT
 public:
     RenderWindow(QSize size);
 
-    QPixmap Canvas;
+    QPixmap CanvasBacking;
+    QPainter Canvas;
 
     QString getStatus() const;
 
 public slots:
+
+    void setPixel(int x, int y, int r, int g, int b);
+
+    void renderComplete();
+
+
 
     void SaveAs();
 
@@ -38,24 +46,23 @@ public slots:
     void updateEvent();
 
 signals:
-    void RenderComplete();
     void StatusUpdated(QString newStatus);
 
 protected:
+    void scheduleRedraw();
+
     QLabel imageLabel;
-    QThread *renderThread;
+    RenderThread *renderThread;
     QElapsedTimer timer;
     QTimer updateTimer;
 
     unsigned long pixelsRendered;
     unsigned long pixelsToRender;
+    qint64 totalTime;
 
     std::shared_ptr<World>   theWorld;
 
     void setStatus(const QString &newStatus);
-
-private:
-    QString statusText;
 };
 
 

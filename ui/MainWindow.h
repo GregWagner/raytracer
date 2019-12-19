@@ -8,6 +8,8 @@
 #include <QMainWindow>
 #include <QMdiArea>
 
+class QMdiSubWindow;
+
 class MainWindow: public QMainWindow {
     Q_OBJECT
 public:
@@ -16,6 +18,9 @@ public:
     QMdiArea MdiArea;
 
 public slots:
+    void focusSubWindow(QMdiSubWindow *window);
+
+    void FileNew();
     void FileOpen();
     void FileSaveAs();
     void RenderStart();

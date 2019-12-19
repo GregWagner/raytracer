@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_AUTOMOC ON)
@@ -47,8 +47,29 @@ add_executable(RayTracer
         ui/MainWindow.h
         ui/RenderWindow.cpp
         ui/RenderWindow.h
+        ui/RenderThread.cpp
+        ui/RenderThread.h
+        Utilities/Constants.h
+        Utilities/Maths.h
+        Utilities/Matrix.cpp
+        Utilities/Matrix.h
+        Utilities/Normal.cpp
+        Utilities/Normal.h
+        Utilities/Point2D.cpp
+        Utilities/Point2D.h
+        Utilities/Point3D.cpp
+        Utilities/Point3D.h
+        Utilities/Ray.cpp
+        Utilities/Ray.h
+        Utilities/RGBColor.cpp
+        Utilities/RGBColor.h
+        Utilities/ShadeRec.cpp
+        Utilities/ShadeRec.h
+        Utilities/Vector3D.cpp
+        Utilities/Vector3D.h
         World/ViewPlane.cpp
         World/ViewPlane.h
         World/World.cpp
-        World/World.h)
+        World/World.h
+        )
 target_link_libraries(RayTracer Qt5::Widgets)
