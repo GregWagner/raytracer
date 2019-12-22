@@ -87,23 +87,37 @@ World::~World(void) {
 // This uses orthographic viewing along the zw axis
 
 void 												
-World::render_scene(void) const {
-
-	RGBColor	pixel_color;	 	
+World::render_scene() const {
+	RGBColor	pixel_color;
 	Ray			ray;					
-	int 		hres 	= vp.hres;
-	int 		vres 	= vp.vres;
-	float		s		= vp.s;
-	float		zw		= 100.0;				// hardwired in
+	const int   hres 	= vp.hres;
+	const int 	vres 	= vp.vres;
+	const float	s		= vp.s;
+	const float	zw		= 100.0;				// hardwired in
+	const int   n = static_cast<int>(sqrt(static_cast<double>(vp.num_samples)));
+	const auto  num_samples = static_cast<double>(n * n);
+	Point2D     pp;
 
 	ray.d = Vector3D(0, 0, -1);
 	
-	for (int r = 0; r < vres; r++)			// up
-		for (int c = 0; c <= hres; c++) {	// across 					
-			ray.o = Point3D(s * (c - hres / 2.0 + 0.5), s * (r - vres / 2.0 + 0.5), zw);
-			pixel_color = tracer_ptr->trace_ray(ray);
-			display_pixel(r, c, pixel_color);
-		}	
+	for (int r = 0; r < vres; r++) {            // up
+        for (int c = 0; c <= hres; c++) {    // across
+            pixel_color = black;
+
+            // now do the regular sampling.
+            for (int p = 0; p < n; p++) {
+                for (int q = 0; q < n; q++) {
+                    // set PP to the subsampled origin.
+                    pp.x = s * (c - 0.5 * hres + (q + 0.5) / n);
+                    pp.y = s * (r - 0.5 * hres + (p + 0.5) / n);
+                    ray.o = Point3D(pp.x, pp.y, zw);
+                    pixel_color += tracer_ptr->trace_ray(ray);
+                }
+            }
+            pixel_color /= num_samples;
+            display_pixel(r, c, pixel_color);
+        }
+    }
 }  
 
 

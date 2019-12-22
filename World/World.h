@@ -65,7 +65,7 @@ class World {
 		build(void);
 
 		void 												
-		render_scene(void) const;
+		render_scene() const;
 						
 		RGBColor
 		max_to_one(const RGBColor& c) const;
