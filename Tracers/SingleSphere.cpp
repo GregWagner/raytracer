@@ -4,7 +4,7 @@
 
 // -------------------------------------------------------------------- default constructor
 
-SingleSphere::SingleSphere(void)
+SingleSphere::SingleSphere()
 	: Tracer()
 {}
 
@@ -14,11 +14,6 @@ SingleSphere::SingleSphere(void)
 SingleSphere::SingleSphere(World* _worldPtr)
 	: Tracer(_worldPtr)
 {}
-
-
-// -------------------------------------------------------------------- destructor
-
-SingleSphere::~SingleSphere(void) {}
 
 
 // -------------------------------------------------------------------- trace_ray

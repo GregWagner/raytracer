@@ -14,19 +14,18 @@ class World;
 
 class Tracer {
 	public:
-	
-		Tracer(void);									
-		
-		Tracer(World* _world_ptr);						
+		Tracer();
+
+		explicit Tracer(World* _world_ptr);
 				
 		virtual											
-		~Tracer(void);									
+		~Tracer();
 
 		virtual RGBColor	
 		trace_ray(const Ray& ray) const;
 
 		virtual RGBColor	
-		trace_ray(const Ray ray, const int depth) const;
+		trace_ray(const Ray& ray, int depth) const;
 				
 	protected:
 	
