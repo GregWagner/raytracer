@@ -12,9 +12,14 @@
 
 MainWindow::MainWindow():
     QMainWindow(),
-    MdiArea()
+    MdiArea(),
+    useMultithreading(true)
 {
     setWindowTitle(tr("RayTracer"));
+
+    if (QThread::idealThreadCount() <= 2) {
+        useMultithreading = false;
+    }
 
     auto *mb = menuBar();
     auto *fileMenu = mb->addMenu(tr("&File"));
@@ -26,7 +31,15 @@ MainWindow::MainWindow():
     fileMenu->addAction(QIcon::fromTheme("application-exit"), tr("E&xit"), QApplication::instance(), &QApplication::closeAllWindows);
 
     auto *renderMenu = mb->addMenu(tr("&Render"));
-    renderMenu->addAction(tr("&Start"), this, &MainWindow::RenderStart);
+    MultiThreadedRendering = renderMenu->addAction(tr("Enable &Multithreaded Renderer"), this, &MainWindow::RenderToggleMultithreading);
+    MultiThreadedRendering->setCheckable(true);
+    MultiThreadedRendering->setChecked(useMultithreading);
+    if (QThread::idealThreadCount() <= 1) {
+        MultiThreadedRendering->setEnabled(false);
+    }
+
+
+        renderMenu->addAction(tr("&Start"), this, &MainWindow::RenderStart);
 //    renderMenu->addAction(tr("&Pause"), this, &MainWindow::RenderPause);
 //    renderMenu->addAction(tr("&Resume"), this, &MainWindow::RenderResume);
 
@@ -37,6 +50,11 @@ MainWindow::MainWindow():
     connect(&MdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::focusSubWindow);
 
     FileNew();
+}
+
+void MainWindow::RenderToggleMultithreading() {
+    useMultithreading = !useMultithreading;
+    MultiThreadedRendering->setChecked(useMultithreading);
 }
 
 void
@@ -52,7 +70,7 @@ void MainWindow::RenderStart() {
 
     auto *renderWindow = dynamic_cast<RenderWindow *>(current);
     if (nullptr != renderWindow) {
-        renderWindow->RenderStart();
+        renderWindow->RenderStart(false);
     }
 }
 

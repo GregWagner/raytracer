@@ -56,7 +56,7 @@ void RenderWindow::SaveAs() {
     }
 }
 
-void RenderWindow::RenderStart() {
+void RenderWindow::RenderStart(bool useMultithreading) {
     theWorld = std::make_shared<World>();
 
     setStatus(tr("Building world..."));
@@ -76,10 +76,12 @@ void RenderWindow::RenderStart() {
 
     timer.start();
 
-    //FIXME: start the actual renderer...
     theWorld->paintArea = this;
-    unsigned maxThreads = theWorld->camera_ptr->max_render_threads(*theWorld);
-    unsigned workThreadCount = std::min<unsigned>(maxThreads, QThread::idealThreadCount());
+    unsigned workThreadCount = 1;
+    if (useMultithreading) {
+        unsigned maxThreads = theWorld->camera_ptr->max_render_threads(*theWorld);
+        workThreadCount = std::min<unsigned>(maxThreads, QThread::idealThreadCount());
+    }
     ThreadsPending.store(workThreadCount);
     for (unsigned t = 0; t < workThreadCount; t++) {
         auto *thr = new RenderThread(theWorld, t, workThreadCount);

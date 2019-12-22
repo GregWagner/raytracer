@@ -7,6 +7,7 @@
 
 #include <QMainWindow>
 #include <QMdiArea>
+#include <QMenuBar>
 
 class QMdiSubWindow;
 
@@ -17,6 +18,10 @@ public:
 
     QMdiArea MdiArea;
 
+    QAction * MultiThreadedRendering;
+
+    bool useMultithreading;
+
 public slots:
     void focusSubWindow(QMdiSubWindow *window);
 
@@ -26,6 +31,7 @@ public slots:
     void RenderStart();
     void RenderPause();
     void RenderResume();
+    void RenderToggleMultithreading();
 };
 
 

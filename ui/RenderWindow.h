@@ -49,7 +49,7 @@ public:
 public slots:
     void SaveAs();
 
-    void RenderStart();
+    void RenderStart(bool useMultithreading);
 
     void RenderPause();
 
