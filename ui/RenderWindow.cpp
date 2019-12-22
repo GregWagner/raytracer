@@ -21,9 +21,11 @@ RenderWindow::RenderWindow() :
     imageLabel(),
     RawImageBacking(),
     backingWidth(0),
-    backingHeight(0)
+    backingHeight(0),
+    pixelsToRender(0),
+    pixelsRendered(0)
 {
-
+    setAttribute(Qt::WA_DeleteOnClose, true);
     totalTime = 0;
 
     imageLabel.setAlignment(Qt::AlignCenter | Qt::AlignHCenter);
@@ -109,6 +111,7 @@ void RenderWindow::renderFinished() {
     setStatus(tr("Render Complete.  Took %1 ms").arg(totalTime));
 
     theWorld.reset();
+    emit ActionsUpdated();
 }
 
 void RenderWindow::newBackingImage(int width, int height) {
@@ -120,6 +123,7 @@ void RenderWindow::newBackingImage(int width, int height) {
     CanvasBacking = QSharedPointer<QImage>::create(RawImageBacking.data(), width, height, QImage::Format_RGBA8888);
     //CanvasBacking->fill(QColor("darkGray"));
     scheduleRedraw();
+    emit ActionsUpdated();
 }
 
 void
@@ -168,4 +172,8 @@ RenderWindow::scheduleRedraw()
 
 QSize RenderWindow::sizeHint() const {
     return {500, 500};
+}
+
+bool RenderWindow::isRendering() const {
+    return ThreadsPending.load() > 0;
 }

@@ -26,7 +26,8 @@ MainWindow::MainWindow():
 
     fileMenu->addAction(QIcon::fromTheme("document-new"), tr("&New"), this, &MainWindow::FileNew);
 //    fileMenu->addAction(QIcon::fromTheme("document-open"), tr("&Open..."), this, &MainWindow::FileOpen);
-    fileMenu->addAction(QIcon::fromTheme("document-save-as"), tr("&Save as..."), this, &MainWindow::FileSaveAs);
+    ActionFileSaveAs = fileMenu->addAction(QIcon::fromTheme("document-save-as"), tr("&Save as..."), this, &MainWindow::FileSaveAs);
+    ActionFileSaveAs->setEnabled(false);
     fileMenu->addSeparator();
     fileMenu->addAction(QIcon::fromTheme("application-exit"), tr("E&xit"), QApplication::instance(), &QApplication::closeAllWindows);
 
@@ -38,8 +39,8 @@ MainWindow::MainWindow():
         MultiThreadedRendering->setEnabled(false);
     }
 
-
-        renderMenu->addAction(tr("&Start"), this, &MainWindow::RenderStart);
+    ActionRenderStart = renderMenu->addAction(tr("&Start"), this, &MainWindow::RenderStart);
+    ActionRenderStart->setEnabled(false);
 //    renderMenu->addAction(tr("&Pause"), this, &MainWindow::RenderPause);
 //    renderMenu->addAction(tr("&Resume"), this, &MainWindow::RenderResume);
 
@@ -62,6 +63,7 @@ MainWindow::FileNew()
 {
     auto *subWindow = new RenderWindow();
     MdiArea.addSubWindow(subWindow);
+    connect(subWindow, &RenderWindow::ActionsUpdated,  this, &MainWindow::updateMenusForFocus);
     subWindow->show();
 }
 
@@ -98,4 +100,21 @@ void MainWindow::FileSaveAs() {
 void
 MainWindow::focusSubWindow(QMdiSubWindow *window)
 {
+    updateMenusForFocus();
 }
+
+void MainWindow::updateMenusForFocus() {
+    auto *window = MdiArea.currentSubWindow();
+    RenderWindow *wrecast = (window != nullptr)?dynamic_cast<RenderWindow *>(window):nullptr;
+    if (wrecast == nullptr) {
+        // no window, or non-render, don't bother.
+        ActionRenderStart->setEnabled(false);
+        ActionFileSaveAs->setEnabled(false);
+        return;
+    }
+    // only enable File Save As if there's something to save.
+    ActionRenderStart->setEnabled(!wrecast->isRendering());
+    ActionFileSaveAs->setEnabled(wrecast->CanvasBacking);
+}
+
+

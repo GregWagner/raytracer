@@ -46,6 +46,8 @@ public:
      */
     void setPixel(int x, int y, int r, int g, int b);
 
+    bool isRendering() const;
+
 public slots:
     void SaveAs();
 
@@ -62,6 +64,7 @@ protected slots:
 
 signals:
     void StatusUpdated(QString newStatus);
+    void ActionsUpdated();
 
 protected:
     void renderFinished();

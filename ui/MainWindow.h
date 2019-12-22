@@ -19,6 +19,8 @@ public:
     QMdiArea MdiArea;
 
     QAction * MultiThreadedRendering;
+    QAction * ActionRenderStart;
+    QAction * ActionFileSaveAs;
 
     bool useMultithreading;
 
@@ -32,6 +34,7 @@ public slots:
     void RenderPause();
     void RenderResume();
     void RenderToggleMultithreading();
+    void updateMenusForFocus();
 };
 
 
