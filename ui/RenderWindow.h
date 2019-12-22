@@ -29,14 +29,24 @@ public:
 
     QString getStatus() const;
 
-public slots:
+    std::vector<unsigned char> RawImageBacking;
+    unsigned backingWidth;
+    unsigned backingHeight;
 
+    /** setPixel sets a pixel on the current backing.  It's NOT synchronised (on purpose), so
+     * having two threads hit the same pixel simultaneously is undefined.
+     *
+     * This is exposed so the RayTracing Camera API can hit it directly.
+     *
+     * @param x x coordinate.  Must be within the bounds expected after the last newBackingImage call.
+     * @param y y coordinate.  Must be within the bounds expected after the last newBackingImage call.
+     * @param r Red component - 0-255 range.
+     * @param g Green component - 0-255 range.
+     * @param b Blue component - 0-255 range.
+     */
     void setPixel(int x, int y, int r, int g, int b);
 
-    void renderComplete();
-
-
-
+public slots:
     void SaveAs();
 
     void RenderStart();
@@ -47,18 +57,22 @@ public slots:
 
     void updateEvent();
 
+protected slots:
+    void threadFinished();
+
 signals:
     void StatusUpdated(QString newStatus);
 
 protected:
+    void renderFinished();
     void scheduleRedraw();
 
+    QAtomicInt ThreadsPending;
     QLabel imageLabel;
-    RenderThread *renderThread;
     QElapsedTimer timer;
     QTimer updateTimer;
 
-    unsigned long pixelsRendered;
+    QAtomicInt pixelsRendered;
     unsigned long pixelsToRender;
     qint64 totalTime;
 

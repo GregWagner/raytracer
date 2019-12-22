@@ -15,18 +15,14 @@ class RenderThread: public QThread
 {
     Q_OBJECT
 public:
-    RenderThread(std::shared_ptr<World> world);
+    RenderThread(const std::shared_ptr<World> &world, int threadNumber=0, int threadsTotal=1);
 
     void run() override;
 
-    void setPixel(int x, int y, int red, int green, int blue);
-
-signals:
-    void pixel(int x, int y, int red, int green, int blue);
-
 protected:
+    int         threadNumber;
+    int         threadsTotal;
     std::shared_ptr<World>      world;
-
 };
 
 

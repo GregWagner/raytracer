@@ -25,7 +25,10 @@ class Camera {
 		~Camera();   							
 
 		virtual void 																		
-		render_scene(const World& w) = 0;
+		render_scene(const World &w, unsigned threadnum=0, unsigned threadcount=1) = 0;
+
+		virtual unsigned
+		max_render_threads(const World &w);
 		
 		void
 		set_eye(const Point3D& p);

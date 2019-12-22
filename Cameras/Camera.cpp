@@ -85,4 +85,9 @@ Camera::compute_uvw() {
 	}
 }
 
+unsigned
+Camera::max_render_threads(const World &) {
+    return 1;
+}
+
 

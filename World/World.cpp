@@ -38,7 +38,7 @@
 
 #include "../build/BuildShadedObjects.cpp"
 
-#include "../ui/RenderThread.h"
+#include "../ui/RenderWindow.h"
 
 // -------------------------------------------------------------------- default constructor
 

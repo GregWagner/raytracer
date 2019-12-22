@@ -5,6 +5,7 @@
 #include "../Utilities/Vector3D.h"
 #include "Pinhole.h"
 #include <cmath>
+#include <algorithm>
 
 // ----------------------------------------------------------------------------- default constructor
 
@@ -69,7 +70,7 @@ Pinhole::get_direction(const Point2D& p) const {
 // ----------------------------------------------------------------------------- render_scene
 
 void 												
-Pinhole::render_scene(const World& w) {
+Pinhole::render_scene(const World &w, unsigned threadnum, unsigned threadcount) {
 	RGBColor	L;
 	ViewPlane	vp(w.vp);	 								
 	Ray			ray;
@@ -79,8 +80,17 @@ Pinhole::render_scene(const World& w) {
 		
 	vp.s /= zoom;
 	ray.o = eye;
+
+	int rs = 0;
+	int re = vp.vres;
+	if (threadcount > 1) {
+	    re /= static_cast<int>(threadcount);
+	    rs = static_cast<int>(threadnum) * re;
+	    re += rs;
+	    re = std::min<int>(re, vp.vres);
+	}
 		
-	for (int r = 0; r < vp.vres; r++)			// up
+	for (int r = rs; r < re; r++)			// up
 		for (int c = 0; c < vp.hres; c++) {		// across 					
 			L = black; 
 			
@@ -92,10 +102,14 @@ Pinhole::render_scene(const World& w) {
 					L += w.tracer_ptr->trace_ray(ray, depth);
 				}	
 											
-			L /= vp.num_samples;
+			L /= n*n;
 			L *= exposure_time;
 			w.display_pixel(r, c, L);
 		} 
 }
 
+unsigned int
+Pinhole::max_render_threads(const World &w) {
+    return w.vp.vres;
+}
 

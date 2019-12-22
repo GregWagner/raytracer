@@ -15,8 +15,8 @@ class Pinhole: public Camera {
 
 		Pinhole(const Pinhole& ph);	
 		
-		virtual Camera*						
-		clone(void) const;			
+		Camera*
+		clone() const override;
 
 		Pinhole& 							
 		operator= (const Pinhole& rhs);	
@@ -33,10 +33,12 @@ class Pinhole: public Camera {
 		Vector3D								
 		get_direction(const Point2D& p) const;
 		
-		virtual void 												
-		render_scene(const World& w);
-		
-	private:
+		void
+		render_scene(const World &w, unsigned threadnum, unsigned threadcount) override;
+
+        unsigned int max_render_threads(const World &w) override;
+
+private:
 			
 		float	d;		// view plane distance
 		float	zoom;	// zoom factor
@@ -60,6 +62,6 @@ Pinhole::set_view_distance(float _d) {
 inline void
 Pinhole::set_zoom(float zoom_factor) {
 	zoom = zoom_factor;
-}	
+}
 
 #endif

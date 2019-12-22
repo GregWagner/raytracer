@@ -17,7 +17,11 @@ RenderWindow::RenderWindow() :
     QMdiSubWindow(),
     CanvasBacking(),
     Canvas(),
-    imageLabel()
+    ThreadsPending(0),
+    imageLabel(),
+    RawImageBacking(),
+    backingWidth(0),
+    backingHeight(0)
 {
 
     totalTime = 0;
@@ -63,56 +67,72 @@ void RenderWindow::RenderStart() {
 
     setStatus(tr("Rendering..."));
 
-    pixelsRendered = 0;
     pixelsToRender = CanvasBacking->width() * CanvasBacking->height();
+    pixelsRendered.store(0);
 
-    updateTimer.setInterval(250);
+    updateTimer.setInterval(200);
     connect(&updateTimer, &QTimer::timeout, this, &RenderWindow::updateEvent);
     updateTimer.start();
 
     timer.start();
 
     //FIXME: start the actual renderer...
-    renderThread = new RenderThread(theWorld);
-    connect(renderThread, &RenderThread::pixel, this, &RenderWindow::setPixel, Qt::QueuedConnection);
-    connect(renderThread, &RenderThread::finished, this, &RenderWindow::renderComplete, Qt::QueuedConnection);
-    renderThread->start(QThread::Priority::LowPriority);
+    theWorld->paintArea = this;
+    unsigned maxThreads = theWorld->camera_ptr->max_render_threads(*theWorld);
+    unsigned workThreadCount = std::min<unsigned>(maxThreads, QThread::idealThreadCount());
+    ThreadsPending.store(workThreadCount);
+    for (unsigned t = 0; t < workThreadCount; t++) {
+        auto *thr = new RenderThread(theWorld, t, workThreadCount);
+        connect(thr, &RenderThread::finished, thr, &QObject::deleteLater);
+        // these two are threadsafe and must have min latency.  use DirectConnection only.
+        connect(thr, &RenderThread::finished, this, &RenderWindow::threadFinished);
+        thr->start();
+    }
+}
+
+void RenderWindow::threadFinished() {
+    auto i = ThreadsPending.fetchAndSubOrdered(1);
+    if (i == 1) {
+        renderFinished();
+    }
+}
+
+void RenderWindow::renderFinished() {
+    // stop the periodic and overall time timers.
+    updateTimer.stop();
+    totalTime += timer.elapsed();
+
+    // redraw.
+    scheduleRedraw();
+    setStatus(tr("Render Complete.  Took %1 ms").arg(totalTime));
+
+    theWorld.reset();
 }
 
 void RenderWindow::newBackingImage(int width, int height) {
-    CanvasBacking = QSharedPointer<QImage>::create(width, height, QImage::Format_RGB888);
-    CanvasBacking->fill(QColor("darkGray"));
+    CanvasBacking.reset();
+    RawImageBacking.clear();
+    backingWidth = width;
+    backingHeight = height;
+    RawImageBacking.resize(width * height * 4);
+    CanvasBacking = QSharedPointer<QImage>::create(RawImageBacking.data(), width, height, QImage::Format_RGBA8888);
+    //CanvasBacking->fill(QColor("darkGray"));
     scheduleRedraw();
 }
 
 void
 RenderWindow::setPixel(int x, int y, int r, int g, int b)
 {
-    if (CanvasBacking) {
-        CanvasBacking->setPixelColor(x, y, QColor(r, g, b));
-        pixelsRendered++;
-    }
+    unsigned char *wp = &RawImageBacking[(x + (y * backingWidth)) * 4];
+    *(wp++) = r;
+    *(wp++) = g;
+    *(wp++) = b;
+    *wp = 0xFF;
+    pixelsRendered++;
 }
 
 void RenderWindow::RenderPause() {
 
-}
-
-void
-RenderWindow::renderComplete()
-{
-    // stop the periodic and overall time timers.
-    updateTimer.stop();
-    totalTime += timer.elapsed();
-
-    disconnect(renderThread, nullptr, nullptr, nullptr);
-    delete renderThread;
-    renderThread = nullptr;
-
-    scheduleRedraw();
-    setStatus(tr("Render Complete.  Took %1 ms").arg(totalTime));
-
-    theWorld.reset();
 }
 
 void RenderWindow::RenderResume() {

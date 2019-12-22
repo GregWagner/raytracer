@@ -26,9 +26,7 @@
 #include "../Lights/Light.h"
 #include "../Lights/Ambient.h"
 
-using namespace std;
-
-class RenderThread; 	//part of skeleton - wxRaytracer.h
+class RenderWindow; 	//part of skeleton - wxRaytracer.h
 
 class World {
 	public:
@@ -37,17 +35,17 @@ class World {
 		RGBColor					background_color;
 		Tracer*						tracer_ptr;
 		Light*   					ambient_ptr;
-		Camera*						camera_ptr;		
+		Camera*						camera_ptr;
 		Sphere 						sphere;		// for Chapter 3 only
-		vector<GeometricObject*>	objects;		
-		vector<Light*> 				lights;
+		std::vector<GeometricObject*> objects;
+		std::vector<Light*> 		lights;
 		
-		RenderThread* 				paintArea; 	//connection to skeleton - wxRaytracer.h
+		RenderWindow* 				paintArea; 	//connection to skeleton - wxRaytracer.h
 			
 
 	public:
 	
-		World(void);												
+		World(void);
 		
 		~World();
 								
@@ -55,13 +53,13 @@ class World {
 		add_object(GeometricObject* object_ptr);
 		
 		void 
-		add_light(Light* light_ptr); 
+		add_light(Light* light_ptr);
 		
 		void
-		set_ambient_light(Light* light_ptr);			
+		set_ambient_light(Light* light_ptr);
 		
 		void
-		set_camera(Camera* c_ptr);	 
+		set_camera(Camera* c_ptr);
 
 		void 					
 		build(void);
@@ -95,7 +93,7 @@ class World {
 // ------------------------------------------------------------------ add_object
 
 inline void 
-World::add_object(GeometricObject* object_ptr) {  
+World::add_object(GeometricObject* object_ptr) {
 	objects.push_back(object_ptr);	
 }
 
@@ -103,7 +101,7 @@ World::add_object(GeometricObject* object_ptr) {
 // ------------------------------------------------------------------ add_light
 
 inline void 
-World::add_light(Light* light_ptr) {  
+World::add_light(Light* light_ptr) {
 	lights.push_back(light_ptr);
 }
 
