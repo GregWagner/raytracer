@@ -14,12 +14,6 @@ MultipleObjects::MultipleObjects(World* _worldPtr)
 	: Tracer(_worldPtr)
 {}
 
-
-// -------------------------------------------------------------------- destructor
-
-MultipleObjects::~MultipleObjects(void) {}
-
-
 // -------------------------------------------------------------------- trace_ray
 
 RGBColor	
