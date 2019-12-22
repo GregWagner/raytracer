@@ -165,5 +165,5 @@ RenderWindow::scheduleRedraw()
 }
 
 QSize RenderWindow::sizeHint() const {
-    return {400, 400};
+    return {500, 500};
 }
