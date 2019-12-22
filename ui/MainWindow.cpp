@@ -72,7 +72,7 @@ void MainWindow::RenderStart() {
 
     auto *renderWindow = dynamic_cast<RenderWindow *>(current);
     if (nullptr != renderWindow) {
-        renderWindow->RenderStart(false);
+        renderWindow->RenderStart(useMultithreading);
     }
 }
 
