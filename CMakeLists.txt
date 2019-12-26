@@ -35,6 +35,20 @@ add_executable(RayTracer
         Materials/Material.h
         Materials/Matte.cpp
         Materials/Matte.h
+        Samplers/Hammersley.cpp
+        Samplers/Hammersley.h
+        Samplers/Jittered.cpp
+        Samplers/Jittered.h
+        Samplers/MultiJittered.cpp
+        Samplers/MultiJittered.h
+        Samplers/NRooks.cpp
+        Samplers/NRooks.h
+        Samplers/PureRandom.cpp
+        Samplers/PureRandom.h
+        Samplers/Regular.cpp
+        Samplers/Regular.h
+        Samplers/Sampler.cpp
+        Samplers/Sampler.h
         Tracers/MultipleObjects.cpp
         Tracers/MultipleObjects.h
         Tracers/RayCast.cpp
