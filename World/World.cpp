@@ -111,7 +111,7 @@ World::render_scene(void) const {
 
 RGBColor
 World::max_to_one(const RGBColor& c) const  {
-	float max_value = max(c.r, max(c.g, c.b));
+	float max_value = std::max<float>(c.r, std::max<float>(c.g, c.b));
 	
 	if (max_value > 1.0)
 		return (c / max_value);
