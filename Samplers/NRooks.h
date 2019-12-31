@@ -10,30 +10,22 @@
 
 #include "Sampler.h"
 
-class NRooks: public Sampler {
-	public:
-		
-		NRooks(void);									
-		
-		NRooks(const int num_samples);					
-		
-		NRooks(const int num_samples, const int m);	
+class NRooks : public Sampler
+{
+public:
+    NRooks(int num_samples = 1, int m = kDefaultSets);
 
-		NRooks(const NRooks& nr);					
+    NRooks(const NRooks &nr);
 
-		NRooks& 
-		operator= (const NRooks& rhs);				
+    NRooks &
+    operator=(const NRooks &rhs);
 
-		virtual NRooks*								
-		clone(void) const;			
+    NRooks *
+    clone() const override;
 
-		virtual
-		~NRooks(void);
-		
-	private:
-		
-		virtual void									
-		generate_samples(void);						
+private:
+    void
+    generate_samples() override;
 };
 
 #endif

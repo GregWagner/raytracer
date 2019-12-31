@@ -33,7 +33,7 @@ public:
     clone() const = 0;
 
     void
-    set_num_sets(const unsigned int np);
+    set_num_sets(unsigned int np);
 
     virtual void                            // generate sample patterns in a unit square
     generate_samples() = 0;
@@ -84,22 +84,26 @@ protected:
 
 
     float                                           // for multi-jittered sampling
-    rand_float(float l, float h) {
+    rand_float(float l, float h)
+    {
         std::uniform_real_distribution<float> dist(l, h);
         return dist(_rng);
     }
 
     int                                                     // for multi-jittered sampling
-    rand_int(int l, int h) {
+    rand_int(int l, int h)
+    {
         std::uniform_int_distribution<int> dist(l, h);
         return dist(_rng);
     }
 
-    int rand_int() {
+    int rand_int()
+    {
         return rand_int(0, RAND_MAX);
     }
 
-    float rand_float() {
+    float rand_float()
+    {
         return rand_float(0.0f, 1.0f);
     }
 
@@ -114,8 +118,8 @@ protected:
     unsigned int jump;                    // random index jump
 
 private:
-    static std::random_device           _rd;
-    std::mt19937                        _rng;
+    static std::random_device _rd;
+    std::mt19937 _rng;
 };
 
 #endif

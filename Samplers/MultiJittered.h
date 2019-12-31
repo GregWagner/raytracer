@@ -10,30 +10,22 @@
 
 #include "Sampler.h"
 
-class MultiJittered: public Sampler {
-	public:
-		
-		MultiJittered(void);								
-		
-		MultiJittered(const int num_samples);				
-		
-		MultiJittered(const int num_samples, const int m);	
+class MultiJittered : public Sampler
+{
+public:
+    explicit MultiJittered(const int num_samples = 1, const int m = kDefaultSets);
 
-		MultiJittered(const MultiJittered& mjs);			
+    MultiJittered(const MultiJittered &mjs);
 
-		MultiJittered& 
-		operator= (const MultiJittered& rhs);				
+    MultiJittered &
+    operator=(const MultiJittered &rhs);
 
-		virtual MultiJittered*								
-		clone(void) const;			
+    MultiJittered *
+    clone() const override;
 
-		virtual
-		~MultiJittered(void);								
-		
-	private:
-		
-		virtual void										
-		generate_samples(void);		
+private:
+    void
+    generate_samples() override;
 };
 
 #endif

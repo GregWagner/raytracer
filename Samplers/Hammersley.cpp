@@ -9,18 +9,11 @@
 //extern float 
 //rand_float(void);
 
-// ---------------------------------------------------------------- default constructor
-	
-Hammersley::Hammersley(void)							
-	: 	Sampler()
-{}
-
-
 // ---------------------------------------------------------------- constructor
 
-Hammersley::Hammersley(const int num)
-	: 	Sampler(num) {
-	generate_samples();
+Hammersley::Hammersley(const unsigned int num, const unsigned int sets)
+	: 	Sampler(num, sets) {
+	Hammersley::generate_samples();
 }
 
 
@@ -28,7 +21,7 @@ Hammersley::Hammersley(const int num)
 
 Hammersley::Hammersley(const Hammersley& h)			
 	: 	Sampler(h) {
-	generate_samples();
+	Hammersley::generate_samples();
 }
 
 // ---------------------------------------------------------------- assignment operator
@@ -46,16 +39,10 @@ Hammersley::operator= (const Hammersley& rhs) {
 
 // ---------------------------------------------------------------- clone
 
-Hammersley*										
-Hammersley::clone(void) const {
+Hammersley*
+Hammersley::clone() const {
 	return (new Hammersley(*this));
 }
-
-
-// ---------------------------------------------------------------- destructor			
-
-Hammersley::~Hammersley(void) {}
-
 
 // ---------------------------------------------------------------- phi
  

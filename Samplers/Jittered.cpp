@@ -7,24 +7,16 @@
 
 // ---------------------------------------------------------------- default constructor
 	
-Jittered::Jittered(void)							
+Jittered::Jittered()
 	: Sampler()
 {}
 
 
 // ---------------------------------------------------------------- constructor
 
-Jittered::Jittered(const int num_samples)
-	: Sampler(num_samples) {
-	generate_samples();
-}
-
-
-// ---------------------------------------------------------------- constructor
-
 Jittered::Jittered(const int num_samples, const int m)
 	: Sampler(num_samples, m) {
-	generate_samples();
+	Jittered::generate_samples();
 }
 
 
@@ -32,7 +24,7 @@ Jittered::Jittered(const int num_samples, const int m)
 
 Jittered::Jittered(const Jittered& js)			
 	: Sampler(js) {
-	generate_samples();
+	Jittered::generate_samples();
 }
 
 // ---------------------------------------------------------------- assignment operator
@@ -50,14 +42,9 @@ Jittered::operator= (const Jittered& rhs) {
 // ---------------------------------------------------------------- clone
 
 Jittered*										
-Jittered::clone(void) const {
+Jittered::clone() const {
 	return (new Jittered(*this));
 }
-
-// ---------------------------------------------------------------- destructor			
-
-Jittered::~Jittered(void) {}
-
 
 // ---------------------------------------------------------------- generate_samples	
 

@@ -12,23 +12,17 @@
 
 class Hammersley: public Sampler {
 	public:
-		
-		Hammersley(void);							
-		
-		Hammersley(const int num);					
+		Hammersley(unsigned int num = 1, unsigned int sets=kDefaultSets);
 
 		Hammersley(const Hammersley& r);			
 
 		Hammersley& 
 		operator= (const Hammersley& rhs);			
 
-		virtual Hammersley*							
-		clone(void) const;
+		Hammersley*
+		clone() const override;
 
-		virtual
-		~Hammersley(void);
-		
-		double 
+		double
 		phi(int j);
 		
 	private:

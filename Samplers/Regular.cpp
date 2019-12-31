@@ -5,28 +5,20 @@
 
 #include "Regular.h"
 
-// ---------------------------------------------------------------- default constructor
-	
-Regular::Regular(void)							
-	: Sampler()
-{}
-
-
 // ---------------------------------------------------------------- constructor
 
 Regular::Regular(const int num)
 	: 	Sampler(num) 
 {
-	generate_samples();
+	Regular::generate_samples();
 }
-
 
 // ---------------------------------------------------------------- copy constructor
 
 Regular::Regular(const Regular& u)			
 	: Sampler(u)
 {
-	generate_samples();
+	Regular::generate_samples();
 }
 
 // ---------------------------------------------------------------- assignment operator
@@ -44,14 +36,9 @@ Regular::operator= (const Regular& rhs)	{
 // ---------------------------------------------------------------- clone
 
 Regular*										
-Regular::clone(void) const {
+Regular::clone() const {
 	return (new Regular(*this));
 }
-
-// ---------------------------------------------------------------- destructor			
-
-Regular::~Regular(void) {}
-
 
 // ---------------------------------------------------------------- generate_samples	
 

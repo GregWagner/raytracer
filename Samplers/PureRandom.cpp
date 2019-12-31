@@ -6,58 +6,61 @@
 #include "PureRandom.h"
 
 // ---------------------------------------------------------------- default constructor
-	
-PureRandom::PureRandom(void)							
-	: Sampler()
+
+PureRandom::PureRandom()
+    : Sampler()
 {}
 
 
 // ---------------------------------------------------------------- constructor
 
 PureRandom::PureRandom(const int num)
-	: Sampler(num) {
-	generate_samples();
+    : Sampler(num)
+{
+    PureRandom::generate_samples();
 }
 
 
 // ---------------------------------------------------------------- constructor
 
-PureRandom::PureRandom(const PureRandom& r)			
-	: Sampler(r) {
-	generate_samples();
+PureRandom::PureRandom(const PureRandom &r)
+    : Sampler(r)
+{
+    PureRandom::generate_samples();
 }
 
 // ---------------------------------------------------------------- assignment operator
 
-PureRandom& 
-PureRandom::operator= (const PureRandom& rhs) {
-	if (this == &rhs)
-		return (*this);
-		
-	Sampler::operator=(rhs);
+PureRandom &
+PureRandom::operator=(const PureRandom &rhs)
+{
+    if (this == &rhs) {
+        return (*this);
+    }
 
-	return (*this);
+    Sampler::operator=(rhs);
+
+    return (*this);
 }
 
 // ---------------------------------------------------------------- clone
 
-PureRandom*										
-PureRandom::clone(void) const {
-	return (new PureRandom(*this));
+PureRandom *
+PureRandom::clone() const
+{
+    return (new PureRandom(*this));
 }
 
-// ---------------------------------------------------------------- destructor			
-
-PureRandom::~PureRandom(void) {}
-
-
-// ---------------------------------------------------------------- generate_samples	
+// ---------------------------------------------------------------- generate_samples
 
 void
-PureRandom::generate_samples(void) {
-	for (int p = 0; p < num_sets; p++)         
-		for (int q = 0; q < num_samples; q++)
-			samples.push_back(Point2D(rand_float(), rand_float()));
+PureRandom::generate_samples()
+{
+    for (int p = 0; p < num_sets; p++) {
+        for (int q = 0; q < num_samples; q++) {
+            samples.emplace_back(rand_float(), rand_float());
+        }
+    }
 }
 
 

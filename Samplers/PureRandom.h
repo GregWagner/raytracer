@@ -1,7 +1,6 @@
 #ifndef __PURE_RANDOM__
 #define __PURE_RANDOM__
 
-
 // 	Copyright (C) Kevin Suffern 2000-2007.
 //	This C++ code is for non-commercial purposes only.
 //	This C++ code is licensed under the GNU General Public License Version 2.
@@ -10,28 +9,26 @@
 
 #include "Sampler.h"
 
-class PureRandom: public Sampler {
-	public:
-		
-		PureRandom(void);							
-		
-		PureRandom(const int num);					
+class PureRandom : public Sampler
+{
+public:
 
-		PureRandom(const PureRandom& r);				
+    PureRandom();
 
-		PureRandom& 
-		operator= (const PureRandom& rhs);			
+    PureRandom(int num);
 
-		virtual PureRandom*							
-		clone(void) const;			
+    PureRandom(const PureRandom &r);
 
-		virtual
-		~PureRandom(void);
-		
-	private:
-		
-		virtual void
-		generate_samples(void);
+    PureRandom &
+    operator=(const PureRandom &rhs);
+
+    PureRandom *
+    clone() const override;
+
+private:
+
+    void
+    generate_samples() override;
 };
 
 #endif
