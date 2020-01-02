@@ -10,25 +10,25 @@
 
 #include "Sampler.h"
 
-class Hammersley: public Sampler {
-	public:
-		Hammersley(unsigned int num = 1, unsigned int sets=kDefaultSets);
+class Hammersley : public Sampler {
+public:
+    Hammersley(unsigned int num = 1, unsigned int sets = kDefaultSets);
 
-		Hammersley(const Hammersley& r);			
+    Hammersley(const Hammersley &r);
 
-		Hammersley& 
-		operator= (const Hammersley& rhs);			
+    Hammersley &
+    operator=(const Hammersley &rhs);
 
-		Hammersley*
-		clone() const override;
+    Hammersley *
+    clone() const override;
 
-		double
-		phi(int j);
-		
-	private:
-		
-		virtual void
-		generate_samples(void);
+    double
+    phi(int j);
+
+private:
+
+    void
+    generate_samples() override;
 };
 
 #endif
