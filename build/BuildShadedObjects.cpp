@@ -5,19 +5,21 @@
 // Jittered sampling for antialiasing is hardwired into the PinHole::render_scene function.
 // There are no sampler classes in this project.
 // These are in the Chapter 5 download file.
-// The spheres are the same as those in the Chapter 14 page one image. 
+// The spheres are the same as those in the Chapter 14 page one image.
+
+#include "../Samplers/Jittered.h"
 
 void 												
-World::build(void) {
-	int num_samples = 1; 
+World::build() {
+	int num_samples = 25;
 	
 	// view plane  
 	  
-	vp.set_hres(400);
-	vp.set_vres(400);
-	vp.set_pixel_size(0.5);
-	vp.set_samples(num_samples);
-	
+	vp.set_hres(800);
+	vp.set_vres(800);
+	vp.set_pixel_size(0.25);
+	vp.set_sampler(new Jittered(num_samples));
+
 	// the ambient light here is the same as the default set in the World
 	// constructor, and can therefore be left out
 	

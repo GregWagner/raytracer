@@ -9,6 +9,8 @@ project(RayTracer LANGUAGES C CXX)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+option(USE_AVX "Enable the use of AVX Optimisations" ON)
+
 add_executable(RayTracer
         main.cpp
         BRDFs/BRDF.cpp
@@ -87,3 +89,10 @@ add_executable(RayTracer
         World/World.h
         )
 target_link_libraries(RayTracer Qt5::Widgets)
+if(USE_AVX)
+    if(MSVC)
+        target_compile_options(RayTracer PRIVATE /arch:AVX)
+    else()
+        target_compile_options(RayTracer PRIVATE -mavx)
+    endif()
+endif()
