@@ -26,12 +26,6 @@ Lambertian::clone(void) const {
 	return (new Lambertian(*this));
 }	
 
-
-// ---------------------------------------------------------------------- destructor
-
-Lambertian::~Lambertian(void) {}
-
-
 // ---------------------------------------------------------------------- assignment operator
 
 Lambertian& 

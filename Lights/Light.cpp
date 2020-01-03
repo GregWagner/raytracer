@@ -2,10 +2,6 @@
 
 #include "../Utilities/Constants.h"
 
-// ---------------------------------------------------------------------- default constructor
-
-Light::Light(void) {}
-
 // ---------------------------------------------------------------------- dopy constructor
 
 Light::Light(const Light& ls) {}
@@ -20,13 +16,6 @@ Light::operator= (const Light& rhs) {
 
 	return (*this);
 }
-
-
-// ---------------------------------------------------------------------- destructor
-
-Light::~Light(void) {} 
-
-
 
 // ---------------------------------------------------------------------- L
 // returns the radiance

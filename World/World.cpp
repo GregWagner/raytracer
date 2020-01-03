@@ -93,8 +93,8 @@ World::render_scene(void) const {
 	Ray			ray;					
 	int 		hres 	= vp.hres;
 	int 		vres 	= vp.vres;
-	float		s		= vp.s;
-	float		zw		= 100.0;				// hardwired in
+	double		s		= vp.s;
+	double		zw		= 100.0;				// hardwired in
 
 	ray.d = Vector3D(0, 0, -1);
 	
@@ -111,7 +111,7 @@ World::render_scene(void) const {
 
 RGBColor
 World::max_to_one(const RGBColor& c) const  {
-	float max_value = std::max<float>(c.r, std::max<float>(c.g, c.b));
+	double max_value = std::max<double>(c.r, std::max<double>(c.g, c.b));
 	
 	if (max_value > 1.0)
 		return (c / max_value);

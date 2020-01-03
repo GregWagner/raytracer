@@ -6,14 +6,14 @@
 class Lambertian: public BRDF {
 	public:
 	
-		Lambertian(void);
+		Lambertian();
 		
 		Lambertian(const Lambertian& lamb);
 		
 		virtual Lambertian*
-		clone(void) const;
+		clone() const;
 		
-		~Lambertian(void);
+		virtual ~Lambertian() = default;
 		
 		Lambertian& 
 		operator= (const Lambertian& rhs);
@@ -25,23 +25,23 @@ class Lambertian: public BRDF {
 		rho(const ShadeRec& sr, const Vector3D& wo) const;
 			
 		void
-		set_ka(const float ka);	
+		set_ka(const double k);
 				
 		void
-		set_kd(const float kd);
+		set_kd(const double k);
 		
 		void
 		set_cd(const RGBColor& c);
 		
 		void													
-		set_cd(const float r, const float g, const float b);
+		set_cd(const double r, const double g, const double b);
 		
 		void													
-		set_cd(const float c);
+		set_cd(const double c);
 					
 	private:
 	
-		float		kd;
+		double		kd;
 		RGBColor 	cd;
 };
 
@@ -51,7 +51,7 @@ class Lambertian: public BRDF {
 // -------------------------------------------------------------- set_ka
 
 inline void
-Lambertian::set_ka(const float k) {
+Lambertian::set_ka(const double k) {
 	kd = k;
 }
 
@@ -60,7 +60,7 @@ Lambertian::set_ka(const float k) {
 // -------------------------------------------------------------- set_kd
 
 inline void
-Lambertian::set_kd(const float k) {
+Lambertian::set_kd(const double k) {
 	kd = k;
 }
 
@@ -76,7 +76,7 @@ Lambertian::set_cd(const RGBColor& c) {
 // ---------------------------------------------------------------- set_cd
 
 inline void													
-Lambertian::set_cd(const float r, const float g, const float b) {
+Lambertian::set_cd(const double r, const double g, const double b) {
 	cd.r = r; cd.g = g; cd.b = b;
 }
 
@@ -84,7 +84,7 @@ Lambertian::set_cd(const float r, const float g, const float b) {
 // ---------------------------------------------------------------- set_cd
 
 inline void													
-Lambertian::set_cd(const float c) {
+Lambertian::set_cd(const double c) {
 	cd.r = c; cd.g = c; cd.b = c;
 }
 

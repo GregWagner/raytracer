@@ -76,7 +76,7 @@ Pinhole::render_scene(const World &w, unsigned threadnum, unsigned threadcount) 
 	Ray			ray;
 	int 		depth = 0;  
 	Point2D 	pp;		// sample point on a pixel
-	int n = (int)sqrt((float)vp.num_samples);
+	int n = (int)sqrt((double)vp.num_samples);
 		
 	vp.s /= zoom;
 	ray.o = eye;

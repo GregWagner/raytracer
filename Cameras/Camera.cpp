@@ -51,13 +51,6 @@ Camera::operator= (const Camera& rhs) {
 	return (*this);
 }
 
-
-// ----------------------------------------------------------------- destructor
-
-Camera::~Camera() {}
-
-
-
 //-------------------------------------------------------------- compute_uvw
 
 // This computes an orthornormal basis given the view point, lookat point, and up vector

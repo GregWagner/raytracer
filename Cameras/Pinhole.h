@@ -25,10 +25,10 @@ class Pinhole: public Camera {
 		~Pinhole();   						
 			
 		void
-		set_view_distance(const float vpd);
+		set_view_distance(const double vpd);
 		
 		void
-		set_zoom(const float zoom_factor);
+		set_zoom(const double zoom_factor);
 		
 		Vector3D								
 		get_direction(const Point2D& p) const;
@@ -40,8 +40,8 @@ class Pinhole: public Camera {
 
 private:
 			
-		float	d;		// view plane distance
-		float	zoom;	// zoom factor
+		double	d;		// view plane distance
+		double	zoom;	// zoom factor
 		
 };
 
@@ -51,8 +51,8 @@ private:
 //-------------------------------------------------------------------------- set_vpd
 
 inline void
-Pinhole::set_view_distance(float _d) {
-	d = _d;
+Pinhole::set_view_distance(const double vpd) {
+	d = vpd;
 }	
 	
 
@@ -60,7 +60,7 @@ Pinhole::set_view_distance(float _d) {
 //-------------------------------------------------------------------------- set_zoom
 
 inline void
-Pinhole::set_zoom(float zoom_factor) {
+Pinhole::set_zoom(const double zoom_factor) {
 	zoom = zoom_factor;
 }
 

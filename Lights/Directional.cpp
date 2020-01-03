@@ -46,11 +46,6 @@ Directional::operator= (const Directional& rhs)
 }
 
 
-// ---------------------------------------------------------------------- destructor																			
-
-Directional::~Directional(void) {}
-
-
 // ---------------------------------------------------------------------- get_direction
 // as this function is virtual, it shouldn't be inlined 
 

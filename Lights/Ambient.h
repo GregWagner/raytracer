@@ -5,41 +5,40 @@
 
 class Ambient: public Light {
 	public:
-	
-		Ambient(void);   							
+		Ambient();
 
 		Ambient(const Ambient& a); 					 
 	
 		virtual Light* 									
-		clone(void) const;	
+		clone() const;
 		
 		Ambient& 									
 		operator= (const Ambient& rhs);									
 		
 		virtual 									
-		~Ambient(void);
+		~Ambient() = default;
 				
 		void
-		scale_radiance(const float b);
+		scale_radiance(const double b);
 		
 		void
-		set_color(const float c);
+		set_color(const double c);
 		
 		void
 		set_color(const RGBColor& c);
 		
 		void
-		set_color(const float r, const float g, const float b); 
+		set_color(const double r, const double g, const double b);
 		
 		virtual Vector3D								
-		get_direction(ShadeRec& s); 
+		get_direction(ShadeRec& s);
 		
 		virtual RGBColor
 		L(ShadeRec& s);
 	
 	private:
 	
-		float		ls;
+		double		ls;
 		RGBColor	color;
 };
 
@@ -49,14 +48,14 @@ class Ambient: public Light {
 // ------------------------------------------------------------------------------- scale_radiance
 
 inline void
-Ambient::scale_radiance(const float b) { 
+Ambient::scale_radiance(const double b) {
 	ls = b;
 }
 
 // ------------------------------------------------------------------------------- set_color
 
 inline void
-Ambient::set_color(const float c) {
+Ambient::set_color(const double c) {
 	color.r = c; color.g = c; color.b = c;
 }
 
@@ -72,7 +71,7 @@ Ambient::set_color(const RGBColor& c) {
 // ------------------------------------------------------------------------------- set_color
 
 inline void
-Ambient::set_color(const float r, const float g, const float b) {
+Ambient::set_color(const double r, const double g, const double b) {
 	color.r = r; color.g = g; color.b = b;
 }
 

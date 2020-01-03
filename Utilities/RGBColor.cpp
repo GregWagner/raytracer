@@ -4,12 +4,6 @@
 
 #include "RGBColor.h"
 
-// -------------------------------------------------------- copy constructor
-
-RGBColor::RGBColor(const RGBColor& c)
-	: r(c.r), g(c.g), b(c.b)
-{}
-
 // --------------------------------------------------------assignment operator
 
 RGBColor& 											
@@ -28,7 +22,7 @@ RGBColor::operator= (const RGBColor& rhs) {
 // used for color filtering in Chapter 28
 
 RGBColor
-RGBColor::powc(float p) const {
+RGBColor::powc(double p) const {
 	return (RGBColor(pow(r, p), pow(g, p), pow(b, p)));
 }
 

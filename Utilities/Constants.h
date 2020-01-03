@@ -17,6 +17,6 @@ const RGBColor	black(0.0);
 const RGBColor	white(1.0);
 const RGBColor	red(1.0, 0.0, 0.0);
 
-const float 	invRAND_MAX = 1.0 / (float)RAND_MAX;
+const double 	invRAND_MAX = 1.0 / static_cast<double>(RAND_MAX);
 
 #endif

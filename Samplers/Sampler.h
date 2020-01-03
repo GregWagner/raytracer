@@ -85,10 +85,10 @@ protected:
     // --- RNG Utility Functions ---
 
 
-    float                                           // for multi-jittered sampling
-    rand_float(float l, float h)
+    double                                           // for multi-jittered sampling
+    rand_float(double l, double h)
     {
-        std::uniform_real_distribution<float> dist(l, h);
+        std::uniform_real_distribution<double> dist(l, h);
         return dist(_rng);
     }
 
@@ -104,9 +104,9 @@ protected:
         return rand_int(0, RAND_MAX);
     }
 
-    float rand_float()
+    double rand_float()
     {
-        return rand_float(0.0f, 1.0f);
+        return rand_float(0.0, 1.0);
     }
 
     unsigned int num_samples;            // the number of sample points in a set

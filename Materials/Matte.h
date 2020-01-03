@@ -9,35 +9,35 @@
 class Matte: public Material {	
 	public:
 			
-		Matte(void);											
+		Matte();
 
 		Matte(const Matte& m);
 		
-		virtual Material*										
-		clone(void) const;									
+		Material*
+		clone() const override;
 
 		Matte& 
 		operator= (const Matte& rhs);							
 
-		~Matte(void);											
+		~Matte();
 		
 		void 													
-		set_ka(const float k);
+		set_ka(const double k);
 		
 		void 													
-		set_kd(const float k);
+		set_kd(const double k);
 		
 		void													
 		set_cd(const RGBColor c);
 		
 		void													
-		set_cd(const float r, const float g, const float b);
+		set_cd(const double r, const double g, const double b);
 		
 		void																						
-		set_cd(const float c);
+		set_cd(const double c);
 				
-		virtual RGBColor										
-		shade(ShadeRec& sr);
+		RGBColor
+		shade(ShadeRec& sr) override;
 		
 	private:
 		
@@ -52,8 +52,8 @@ class Matte: public Material {
 // is diffuse reflection
 
 inline void								
-Matte::set_ka(const float ka) {
-	ambient_brdf->set_kd(ka);
+Matte::set_ka(const double k) {
+	ambient_brdf->set_kd(k);
 }
 
 
@@ -61,8 +61,8 @@ Matte::set_ka(const float ka) {
 // this also sets Lambertian::kd, but for a different Lambertian object
 
 inline void								
-Matte::set_kd (const float kd) {
-	diffuse_brdf->set_kd(kd);
+Matte::set_kd (const double k) {
+	diffuse_brdf->set_kd(k);
 }
 
 
@@ -78,7 +78,7 @@ Matte::set_cd(const RGBColor c) {
 // ---------------------------------------------------------------- set_cd
 
 inline void													
-Matte::set_cd(const float r, const float g, const float b) {
+Matte::set_cd(const double r, const double g, const double b) {
 	ambient_brdf->set_cd(r, g, b);
 	diffuse_brdf->set_cd(r, g, b);
 }
@@ -86,7 +86,7 @@ Matte::set_cd(const float r, const float g, const float b) {
 // ---------------------------------------------------------------- set_cd
 
 inline void													
-Matte::set_cd(const float c) {
+Matte::set_cd(const double c) {
 	ambient_brdf->set_cd(c);
 	diffuse_brdf->set_cd(c);
 }

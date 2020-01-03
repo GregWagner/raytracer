@@ -9,47 +9,48 @@ class RGBColor {
 	
 	public:
 	
-		float	r, g, b;									
+		double	r, g, b;
 				
 	public:
 	
 		constexpr RGBColor(): r(0.0), g(0.0), b(0.0) {};										// default constructor
-        constexpr RGBColor(float c): r(c), g(c), b(c) {};									// constructor
-        constexpr RGBColor(float _r, float _g, float _b): r(_r), g(_g), b(_b) {};				// constructor
-		RGBColor(const RGBColor& c); 						// copy constructor
+        constexpr RGBColor(double c): r(c), g(c), b(c) {};									// constructor
+        constexpr RGBColor(double _r, double _g, double _b): r(_r), g(_g), b(_b) {};				// constructor
+		constexpr RGBColor(const RGBColor& c)			    // copy constructor
+		    : r(c.r), g(c.g), b(c.b) {}
 
 		RGBColor& 											// assignment operator
 		operator= (const RGBColor& rhs); 
 
-		RGBColor 											// addition
+		constexpr RGBColor 									// addition
 		operator+ (const RGBColor& c) const;	
 
 		RGBColor& 											// compound addition
 		operator+= (const RGBColor& c);
 		
-		RGBColor 											// multiplication by a float on the right
-		operator* (const float a) const;
+		constexpr RGBColor 											// multiplication by a float on the right
+		operator* (const double a) const;
 		
 		RGBColor& 											// compound multiplication by a float on the right
-		operator*= (const float a);					
+		operator*= (const double a);
 				
-		RGBColor 											// division by a float
-		operator/ (const float a) const;
+		constexpr RGBColor 											// division by a float
+		operator/ (const double a) const;
 		
 		RGBColor& 											// compound division by a float
-		operator/= (const float a); 
+		operator/= (const double a);
 				
-		RGBColor 											// component-wise multiplication
+		constexpr RGBColor 									// component-wise multiplication
 		operator* (const RGBColor& c) const;
-		
-		bool												// are two RGBColours the same?
+
+		constexpr bool										// are two RGBColours the same?
 		operator== (const RGBColor& c) const;				
 
 		RGBColor											// raise components to a power
-		powc(float p) const;
+		powc(double p) const;
 		
-		float												// the average of the components
-		average(void) const;
+		constexpr double									// the average of the components
+		average() const;
 };
 
 
@@ -59,7 +60,7 @@ class RGBColor {
 // ----------------------------------------------------------------------- operator+
 // addition of two colors
 
-inline RGBColor 
+constexpr RGBColor
 RGBColor::operator+ (const RGBColor& c) const {
 	return (RGBColor(r + c.r, g + c.g, b + c.b));
 }
@@ -78,8 +79,8 @@ RGBColor::operator+= (const RGBColor& c) {
 // ----------------------------------------------------------------------- operator*
 // multiplication by a float on the right
 
-inline RGBColor 
-RGBColor::operator* (const float a) const {
+constexpr RGBColor
+RGBColor::operator* (const double a) const {
 	return (RGBColor (r * a, g * a, b * a));	
 }
 
@@ -88,7 +89,7 @@ RGBColor::operator* (const float a) const {
 // compound multiplication by a float on the right
 
 inline RGBColor& 
-RGBColor::operator*= (const float a) {
+RGBColor::operator*= (const double a) {
 	r *= a; g *= a; b *= a;
 	return (*this);
 }
@@ -97,8 +98,8 @@ RGBColor::operator*= (const float a) {
 // ----------------------------------------------------------------------- operator/
 // division by float
 
-inline RGBColor 
-RGBColor::operator/ (const float a) const {
+constexpr RGBColor
+RGBColor::operator/ (const double a) const {
 	return (RGBColor (r / a, g / a, b / a));
 }
 
@@ -107,7 +108,7 @@ RGBColor::operator/ (const float a) const {
 // compound division by float
 
 inline RGBColor& 
-RGBColor::operator/= (const float a) {	
+RGBColor::operator/= (const double a) {
 	r /= a; g /= a; b /= a;
 	return (*this);
 }
@@ -117,7 +118,7 @@ RGBColor::operator/= (const float a) {
 // ----------------------------------------------------------------------- operator*
 // component-wise multiplication of two colors
 
-inline RGBColor 
+constexpr RGBColor
 RGBColor::operator* (const RGBColor& c) const {
 	return (RGBColor (r * c.r, g * c.g, b * c.b));
 } 
@@ -126,7 +127,7 @@ RGBColor::operator* (const RGBColor& c) const {
 // ----------------------------------------------------------------------- operator==
 // are two RGBColors the same?
 
-inline bool
+constexpr bool
 RGBColor::operator== (const RGBColor& c) const {
 	return (r == c.r && g == c.g && b == c.b);
 }
@@ -135,8 +136,8 @@ RGBColor::operator== (const RGBColor& c) const {
 // ----------------------------------------------------------------------- average
 // the average of the three components
 
-inline float											
-RGBColor::average(void) const {
+constexpr double
+RGBColor::average() const {
 	return (0.333333333333 * (r + g + b));
 }
 
@@ -148,11 +149,8 @@ RGBColor::average(void) const {
 // ----------------------------------------------------------------------- operator*
 // multiplication by a float on the left
 
-RGBColor 
-operator* (const float a, const RGBColor& c);
-
-inline RGBColor 
-operator* (const float a, const RGBColor& c) {
+constexpr RGBColor
+operator* (const double a, const RGBColor& c) {
 	return (RGBColor (a * c.r, a * c.g, a * c.b));	
 }
 

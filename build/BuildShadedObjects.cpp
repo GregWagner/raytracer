@@ -66,8 +66,8 @@ World::build() {
 	
 	// Matte material reflection coefficients - common to all materials
 	
-	float ka = 0.25;
-	float kd = 0.75;
+	double ka = 0.25;
+	double kd = 0.75;
 	
 	
 	// spheres

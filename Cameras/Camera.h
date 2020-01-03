@@ -22,7 +22,7 @@ class Camera {
 		clone() const = 0;
 		
 		virtual
-		~Camera();   							
+		~Camera() = default;
 
 		virtual void 																		
 		render_scene(const World &w, unsigned threadnum=0, unsigned threadcount=1) = 0;
@@ -34,25 +34,25 @@ class Camera {
 		set_eye(const Point3D& p);
 
 		void
-		set_eye(const float x, const float y, const float z);
+		set_eye(const double x, const double y, const double z);
 		
 		void
 		set_lookat(const Point3D& p);
 
 		void
-		set_lookat(const float x, const float y, const float z);
+		set_lookat(const double x, const double y, const double z);
 
 		void
 		set_up_vector(const Vector3D& u);
 
 		void
-		set_up_vector(const float x, const float y, const float z);
+		set_up_vector(const double x, const double y, const double z);
 
 		void
-		set_roll(const float ra);
+		set_roll(const double ra);
 		
 		void
-		set_exposure_time(const float exposure);
+		set_exposure_time(const double exposure);
 		
 		void									
 		compute_uvw();
@@ -62,10 +62,10 @@ class Camera {
 	
 		Point3D			eye;				// eye point
 		Point3D			lookat; 			// lookat point
-		float			ra;					// roll angle
+		double			ra;					// roll angle
 		Vector3D		u, v, w;			// orthonormal basis vectors
 		Vector3D		up;					// up vector
-		float			exposure_time;
+		double			exposure_time;
 		
 		Camera& 							// assignment operator
 		operator= (const Camera& camera);
@@ -86,7 +86,7 @@ Camera::set_eye(const Point3D& p) {
 // ----------------------------------------------------------------- set_eye
 
 inline void
-Camera::set_eye(const float x, const float y, const float z) {
+Camera::set_eye(const double x, const double y, const double z) {
 	eye.x = x; eye.y = y; eye.z = z;
 }
 
@@ -102,7 +102,7 @@ Camera::set_lookat(const Point3D& p) {
 // ----------------------------------------------------------------- set_lookat
 
 inline void
-Camera::set_lookat(const float x, const float y, const float z) {
+Camera::set_lookat(const double x, const double y, const double z) {
 	lookat.x = x; lookat.y = y; lookat.z = z;
 }
 
@@ -118,7 +118,7 @@ Camera::set_up_vector(const Vector3D& u) {
 // ----------------------------------------------------------------- set_up_vector
 
 inline void
-Camera::set_up_vector(const float x, const float y, const float z) {
+Camera::set_up_vector(const double x, const double y, const double z) {
 	up.x = x; up.y = y; up.z = z;
 }
 
@@ -126,15 +126,15 @@ Camera::set_up_vector(const float x, const float y, const float z) {
 // ----------------------------------------------------------------- set_roll
 
 inline void
-Camera::set_roll(const float r) { 
-	ra = r;
+Camera::set_roll(const double ra) {
+	this->ra = ra;
 }
 
 
 // ----------------------------------------------------------------- set_exposure_time
 
 inline void
-Camera::set_exposure_time(const float exposure) {
+Camera::set_exposure_time(const double exposure) {
 	exposure_time = exposure;
 }
 
