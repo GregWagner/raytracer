@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.13.4)
+
+include(CheckCXXCompilerFlag)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_AUTOMOC ON)
@@ -89,10 +91,30 @@ add_executable(RayTracer
         World/World.h
         )
 target_link_libraries(RayTracer Qt5::Widgets)
-if(USE_AVX)
-    if(MSVC)
-        target_compile_options(RayTracer PRIVATE /arch:AVX)
-    else()
-        target_compile_options(RayTracer PRIVATE -mavx)
-    endif()
+
+# turn on autovectorisation.
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    check_cxx_compiler_flag(-fslp-vectorize FSLP_VECTORIZE)
+    check_cxx_compiler_flag(-fvectorize FVECTORIZE)
+    target_compile_options(RayTracer PRIVATE $<$<BOOL:FVECTORIZE>:-fvectorize> $<$<BOOL:FSLP_VECTORIZE>:-fslp-vectorize>)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    check_cxx_compiler_flag(-ftree-vectorize FTREE_VECTORIZE)
+    target_compile_options(RayTracer PRIVATE $<$<BOOL:FTREE_VECTORIZE>:-ftree-vectorize>)
 endif()
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86")
+    check_cxx_compiler_flag(-msse MSSE)
+    check_cxx_compiler_flag(-msse2 MSSE2)
+    target_compile_options(RayTracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
+    if(USE_AVX)
+        if(MSVC)
+            target_compile_options(RayTracer PRIVATE /arch:AVX)
+        else()
+            check_cxx_compiler_flag(-mavx MAVX)
+            target_compile_options(RayTracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
+        endif()
+    endif()
+else()
+    message(WARNING "System Processor = ${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+
