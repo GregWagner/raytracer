@@ -15,6 +15,8 @@ class NRooks : public Sampler
 public:
     NRooks(int num_samples = 1, int m = kDefaultSets);
 
+    virtual ~NRooks() = default;
+
     NRooks(const NRooks &nr);
 
     NRooks &

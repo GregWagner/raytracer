@@ -24,6 +24,8 @@ public:
 
     explicit Sampler(unsigned int samples = 1, unsigned int sets = kDefaultSets);
 
+    virtual ~Sampler() = default;
+
     Sampler(const Sampler &s);
 
     Sampler &

@@ -12,8 +12,9 @@
 class PureRandom : public Sampler
 {
 public:
-
     PureRandom();
+
+    virtual ~PureRandom() = default;
 
     PureRandom(int num);
 

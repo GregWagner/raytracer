@@ -14,6 +14,8 @@ class Hammersley : public Sampler {
 public:
     Hammersley(unsigned int num = 1, unsigned int sets = kDefaultSets);
 
+    virtual ~Hammersley() = default;
+
     Hammersley(const Hammersley &r);
 
     Hammersley &

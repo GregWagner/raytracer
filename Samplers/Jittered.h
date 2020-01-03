@@ -14,6 +14,8 @@ class Jittered: public Sampler {
 	public:
 		
 		Jittered();
+
+		virtual ~Jittered() = default;
 		
 		explicit Jittered(int num_samples, int m = kDefaultSets);
 

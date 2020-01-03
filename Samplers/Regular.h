@@ -13,6 +13,8 @@ class Regular : public Sampler
 public:
     explicit Regular(int num = 1);
 
+    virtual ~Regular() = default;
+
     Regular(const Regular &u);
 
     Regular &

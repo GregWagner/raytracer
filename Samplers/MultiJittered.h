@@ -15,6 +15,8 @@ class MultiJittered : public Sampler
 public:
     explicit MultiJittered(const int num_samples = 1, const int m = kDefaultSets);
 
+    virtual ~MultiJittered() = default;
+
     MultiJittered(const MultiJittered &mjs);
 
     MultiJittered &
