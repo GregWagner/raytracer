@@ -11,12 +11,14 @@ ViewPlane::ViewPlane(void)
 	: 	hres(400), 
 		vres(400),
 		s(1.0),
-		num_samples(1),
+		num_samples(0),
 		gamma(1.0),
 		inv_gamma(1.0),
 		show_out_of_gamut(false),
 		sampler_ptr(nullptr)
-{}
+{
+	set_samples(1);
+}
 
 
 // ---------------------------------------------------------------- copy constructor
@@ -28,8 +30,14 @@ ViewPlane::ViewPlane(const ViewPlane& vp)
 		num_samples(vp.num_samples),
 		gamma(vp.gamma),
 		inv_gamma(vp.inv_gamma),
-		show_out_of_gamut(vp.show_out_of_gamut)
-{}
+		show_out_of_gamut(vp.show_out_of_gamut),
+		sampler_ptr(nullptr)
+{
+	if (vp.sampler_ptr)
+	{
+		sampler_ptr = vp.sampler_ptr->clone();
+	}
+}
 
 
 // ---------------------------------------------------------------- assignment operator
@@ -46,6 +54,10 @@ ViewPlane::operator= (const ViewPlane& rhs) {
 	gamma				= rhs.gamma;
 	inv_gamma			= rhs.inv_gamma;
 	show_out_of_gamut	= rhs.show_out_of_gamut;
+	if (rhs.sampler_ptr)
+	{
+		sampler_ptr = rhs.sampler_ptr->clone();
+	}
 	
 	return (*this);
 }

@@ -3,6 +3,7 @@
 #include "../Utilities/Constants.h"
 #include "../Utilities/Point3D.h"
 #include "../Utilities/Vector3D.h"
+#include "../Samplers/Sampler.h"
 #include "Pinhole.h"
 #include <cmath>
 #include <algorithm>
@@ -76,8 +77,7 @@ Pinhole::render_scene(const World &w, unsigned threadnum, unsigned threadcount) 
 	Ray			ray;
 	int 		depth = 0;  
 	Point2D 	pp;		// sample point on a pixel
-	int n = (int)sqrt((double)vp.num_samples);
-		
+
 	vp.s /= zoom;
 	ray.o = eye;
 
@@ -89,20 +89,20 @@ Pinhole::render_scene(const World &w, unsigned threadnum, unsigned threadcount) 
 	    re += rs;
 	    re = std::min<int>(re, vp.vres);
 	}
-		
+
+	const Point2D vpres(vp.hres, vp.vres);
+
 	for (int r = rs; r < re; r++)			// up
 		for (int c = 0; c < vp.hres; c++) {		// across 					
-			L = black; 
-			
-			for (int p = 0; p < n; p++)			// up pixel
-				for (int q = 0; q < n; q++) {	// across pixel
-					pp.x = vp.s * (c - 0.5 * vp.hres + (q + 0.5) / n); 
-					pp.y = vp.s * (r - 0.5 * vp.vres + (p + 0.5) / n);
-					ray.d = get_direction(pp);
-					L += w.tracer_ptr->trace_ray(ray, depth);
-				}	
-											
-			L /= n*n;
+			L = black;
+            const Point2D cp(c,r);
+			for (int p = 0; p < vp.num_samples; p++) {
+			    const Point2D sp = vp.sampler_ptr->sample_unit_square();
+			    pp = (cp - vpres / 2.0 + sp) * vp.s;
+                ray.d = get_direction(pp);
+                L += w.tracer_ptr->trace_ray(ray, depth);
+            }
+			L /= vp.num_samples;
 			L *= exposure_time;
 			w.display_pixel(r, c, L);
 		} 

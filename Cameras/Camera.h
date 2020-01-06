@@ -12,63 +12,82 @@ class World;  // can't #include "World" here because World contains a camera poi
 //--------------------------------------------------------------------- class Camera
 
 class Camera {
-	public:
-	
-		Camera();   							// default constructor
+public:
+    constexpr Camera()                        // default constructor
+            : eye(0, 0, 500),
+              lookat(0),
+              ra(0),
+              up(0, 1, 0),
+              u(1, 0, 0),
+              v(0, 1, 0),
+              w(0, 0, 1),
+              exposure_time(1.0) {}
 
-		Camera(const Camera& camera);			// copy constructor
-		
-		virtual Camera*							// virtual copy constructor
-		clone() const = 0;
-		
-		virtual
-		~Camera() = default;
+    virtual Camera*							// virtual copy constructor
+    clone() const = 0;
 
-		virtual void 																		
-		render_scene(const World &w, unsigned threadnum=0, unsigned threadcount=1) = 0;
+    virtual
+    ~Camera() = default;
 
-		virtual unsigned
-		max_render_threads(const World &w);
-		
-		void
-		set_eye(const Point3D& p);
+    virtual void
+    render_scene(const World &w, unsigned threadnum=0, unsigned threadcount=1) = 0;
 
-		void
-		set_eye(const double x, const double y, const double z);
-		
-		void
-		set_lookat(const Point3D& p);
+    virtual unsigned
+    max_render_threads(const World &w);
 
-		void
-		set_lookat(const double x, const double y, const double z);
+    void
+    set_eye(const Point3D& p);
 
-		void
-		set_up_vector(const Vector3D& u);
+    void
+    set_eye(const double x, const double y, const double z);
 
-		void
-		set_up_vector(const double x, const double y, const double z);
+    void
+    set_lookat(const Point3D& p);
 
-		void
-		set_roll(const double ra);
-		
-		void
-		set_exposure_time(const double exposure);
-		
-		void									
-		compute_uvw();
-		
-		
-	protected:		
-	
-		Point3D			eye;				// eye point
-		Point3D			lookat; 			// lookat point
-		double			ra;					// roll angle
-		Vector3D		u, v, w;			// orthonormal basis vectors
-		Vector3D		up;					// up vector
-		double			exposure_time;
-		
-		Camera& 							// assignment operator
-		operator= (const Camera& camera);
+    void
+    set_lookat(const double x, const double y, const double z);
+
+    void
+    set_up_vector(const Vector3D& u);
+
+    void
+    set_up_vector(const double x, const double y, const double z);
+
+    void
+    set_roll(const double ra);
+
+    void
+    set_exposure_time(const double exposure);
+
+    void
+    compute_uvw();
+
+
+protected:
+
+    Point3D			eye;				// eye point
+    Point3D			lookat; 			// lookat point
+    double			ra;					// roll angle
+    Vector3D		u, v, w;			// orthonormal basis vectors
+    Vector3D		up;					// up vector
+    double			exposure_time;
+
+    Camera& 							// assignment operator
+    operator= (const Camera& rhs) {
+        if (this == &rhs)
+            return (*this);
+
+        eye				= rhs.eye;
+        lookat			= rhs.lookat;
+        ra				= rhs.ra;
+        up				= rhs.up;
+        u				= rhs.u;
+        v				= rhs.v;
+        w				= rhs.w;
+        exposure_time 	= rhs.exposure_time;
+
+        return (*this);
+    }
 };
 
 
