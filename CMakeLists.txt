@@ -89,7 +89,7 @@ add_executable(RayTracer
         World/ViewPlane.h
         World/World.cpp
         World/World.h
-        )
+        Cameras/ThinLens.cpp Cameras/ThinLens.h)
 target_link_libraries(RayTracer Qt5::Widgets)
 
 # turn on autovectorisation.

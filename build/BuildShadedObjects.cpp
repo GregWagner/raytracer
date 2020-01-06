@@ -8,17 +8,20 @@
 // The spheres are the same as those in the Chapter 14 page one image.
 
 #include "../Samplers/Jittered.h"
+#include "../Samplers/MultiJittered.h"
+#include "../Samplers/Hammersley.h"
 
+#include "../Cameras/ThinLens.h"
 void 												
 World::build() {
-	int num_samples = 25;
-	
+	int num_samples = 100;
+
 	// view plane  
 	  
 	vp.set_hres(800);
 	vp.set_vres(800);
 	vp.set_pixel_size(0.25);
-	vp.set_sampler(new Jittered(num_samples));
+	vp.set_sampler(new MultiJittered(num_samples));
 
 	// the ambient light here is the same as the default set in the World
 	// constructor, and can therefore be left out
@@ -34,12 +37,15 @@ World::build() {
 	
 	// camera
 	
-	Pinhole* pinhole_ptr = new Pinhole;
-	pinhole_ptr->set_eye(0, 0, 500); 
-	pinhole_ptr->set_lookat(Point3D(0.0));
-	pinhole_ptr->set_view_distance(600.0);
-	pinhole_ptr->compute_uvw();     
-	set_camera(pinhole_ptr);
+	ThinLens* thinlens_ptr = new ThinLens;
+	thinlens_ptr->set_eye(0, 0, 500);
+	thinlens_ptr->set_lookat(Point3D(0.0));
+	thinlens_ptr->set_view_distance(600.0);
+	thinlens_ptr->set_focal_distance(500.0);
+	thinlens_ptr->set_lens_radius(20.0);
+	thinlens_ptr->set_sampler(new Hammersley(num_samples));
+	thinlens_ptr->compute_uvw();
+	set_camera(thinlens_ptr);
 
 	
 	// light
