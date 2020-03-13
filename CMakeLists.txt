@@ -122,3 +122,8 @@ else()
     message(WARNING "System Processor = ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+    add_custom_target(winDeps
+            DEPENDS RayTracer
+            COMMAND ${Qt5_DIR}../../../../bin/windeployqt.exe RayTracer.exe)
+endif()
