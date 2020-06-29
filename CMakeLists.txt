@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.4)
+cmake_minimum_required(VERSION 3.10)
 
 option(BUILD_GUI "Build the Qt GUI" OFF)
 include(CheckCXXCompilerFlag)
@@ -16,6 +16,8 @@ project(RayTracer LANGUAGES C CXX)
 if(BUILD_GUI)
     find_package(Qt5 COMPONENTS Widgets REQUIRED)
 endif()
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 option(USE_AVX "Enable the use of AVX Optimisations" ON)
 
@@ -108,7 +110,11 @@ endif()
 
 add_executable(clitracer
         ${RAYTRACER_SRCS}
-        cli/main.cpp cli/ImageTarget.cpp cli/ImageTarget.h)
+        cli/main.cpp
+	cli/ImageTarget.cpp
+	cli/ImageTarget.h
+)
+target_link_libraries(clitracer PRIVATE Threads::Threads)
 
 # turn on autovectorisation.
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -123,7 +129,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     if(BUILD_GUI)
         target_compile_options(RayTracer PRIVATE $<$<BOOL:FTREE_VECTORIZE>:-ftree-vectorize>)
     endif()
-    target_compile_options(clitracer PRIVATE $<$<BOOL:FVECTORIZE>:-fvectorize> $<$<BOOL:FSLP_VECTORIZE>:-fslp-vectorize>)
+    target_compile_options(clitracer PRIVATE $<$<BOOL:FTREE_VECTORISE>:-ftree-vectorize>)
 endif()
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86|AMD64")
@@ -156,7 +162,9 @@ else()
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL Windows)
-    add_custom_target(winDeps
+    if(BUILD_GUI)
+        add_custom_target(winDeps
             DEPENDS RayTracer
             COMMAND ${Qt5_DIR}../../../../bin/windeployqt.exe RayTracer.exe)
+    endif()
 endif()
