@@ -1,15 +1,21 @@
 cmake_minimum_required(VERSION 3.13.4)
 
+option(BUILD_GUI "Build the Qt GUI" OFF)
 include(CheckCXXCompilerFlag)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+
+if(BUILD_GUI)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTORCC ON)
+    set(CMAKE_AUTOUIC ON)
+endif()
 
 project(RayTracer LANGUAGES C CXX)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+if(BUILD_GUI)
+    find_package(Qt5 COMPONENTS Widgets REQUIRED)
+endif()
 
 option(USE_AVX "Enable the use of AVX Optimisations" ON)
 
@@ -86,29 +92,38 @@ set(RAYTRACER_SRCS
         Cameras/ThinLens.h
         Utilities/RenderTarget.h)
 
-add_executable(RayTracer
-        main.cpp
-        ui/MainWindow.cpp
-        ui/MainWindow.h
-        ui/RenderWindow.cpp
-        ui/RenderWindow.h
-        ui/RenderThread.cpp
-        ui/RenderThread.h
-        ${RAYTRACER_SRCS}
-)
+if(BUILD_GUI)
+    add_executable(RayTracer
+            main.cpp
+            ui/MainWindow.cpp
+            ui/MainWindow.h
+            ui/RenderWindow.cpp
+            ui/RenderWindow.h
+            ui/RenderThread.cpp
+            ui/RenderThread.h
+            ${RAYTRACER_SRCS}
+    )
+    target_link_libraries(RayTracer Qt5::Widgets)
+endif()
+
 add_executable(clitracer
         ${RAYTRACER_SRCS}
         cli/main.cpp cli/ImageTarget.cpp cli/ImageTarget.h)
-target_link_libraries(RayTracer Qt5::Widgets)
 
 # turn on autovectorisation.
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     check_cxx_compiler_flag(-fslp-vectorize FSLP_VECTORIZE)
     check_cxx_compiler_flag(-fvectorize FVECTORIZE)
+    if(BUILD_GUI)
+        target_compile_options(clitracer PRIVATE $<$<BOOL:FVECTORIZE>:-fvectorize> $<$<BOOL:FSLP_VECTORIZE>:-fslp-vectorize>)
+    endif()
     target_compile_options(RayTracer PRIVATE $<$<BOOL:FVECTORIZE>:-fvectorize> $<$<BOOL:FSLP_VECTORIZE>:-fslp-vectorize>)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     check_cxx_compiler_flag(-ftree-vectorize FTREE_VECTORIZE)
-    target_compile_options(RayTracer PRIVATE $<$<BOOL:FTREE_VECTORIZE>:-ftree-vectorize>)
+    if(BUILD_GUI)
+        target_compile_options(RayTracer PRIVATE $<$<BOOL:FTREE_VECTORIZE>:-ftree-vectorize>)
+    endif()
+    target_compile_options(clitracer PRIVATE $<$<BOOL:FVECTORIZE>:-fvectorize> $<$<BOOL:FSLP_VECTORIZE>:-fslp-vectorize>)
 endif()
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86|AMD64")
@@ -116,17 +131,23 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86|AMD64")
         # bias the optimizer towards Intel CPUs
         #target_compile_options(RayTracer PRIVATE /favor:INTEL64)
         if(USE_AVX)
-            target_compile_options(RayTracer PRIVATE /arch:AVX)
+            if(BUILD_GUI)
+                target_compile_options(RayTracer PRIVATE /arch:AVX)
+            endif()
             target_compile_options(clitracer PRIVATE /arch:AVX)
         endif()
     else()
         check_cxx_compiler_flag(-msse MSSE)
         check_cxx_compiler_flag(-msse2 MSSE2)
-        target_compile_options(RayTracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
+        if(BUILD_GUI)
+            target_compile_options(RayTracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
+        endif()
         target_compile_options(clitracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
         if(USE_AVX)
             check_cxx_compiler_flag(-mavx MAVX)
-            target_compile_options(RayTracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
+            if(BUILD_GUI)
+                target_compile_options(RayTracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
+            endif()
             target_compile_options(clitracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
         endif()
     endif()
