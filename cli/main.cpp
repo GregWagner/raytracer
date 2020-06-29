@@ -17,6 +17,19 @@ int
 main(int argc, char **argv)
 {
     unsigned int desired_threads = thread::hardware_concurrency();
+
+    // parse commandline options.
+    for (int arg = 1; arg < argc; arg++) {
+        auto thisArg = string(argv[arg]);
+        if (thisArg == "--single") {
+            desired_threads = 1;
+            cout << "Forcing Single Threaded" << endl;
+            continue;
+        }
+        cout << "Unknown argument: " << thisArg << endl;
+        return 1;
+    }
+
     cout << "using " << desired_threads << " threads" << endl;
 
     auto start_time = chrono::steady_clock::now();
@@ -34,13 +47,17 @@ main(int argc, char **argv)
 
     auto render_start_time = chrono::steady_clock::now();
 
-    for (int t = 0; t < desired_threads; t++) {
-        threads[t] = new std::thread([=](int thread){theWorld->camera_ptr->render_scene(*theWorld, thread, desired_threads);}, t);
-    }
-
-    cout << "waiting for rendering threads to finish..." << endl;
-    for (int t = 0; t < desired_threads; t++) {
-        threads[t]->join();
+    if (desired_threads > 1) {
+        for (int t = 0; t < desired_threads; t++) {
+            threads[t] = new std::thread(
+                    [=](int thread) { theWorld->camera_ptr->render_scene(*theWorld, thread, desired_threads); }, t);
+        }
+        cout << "waiting for rendering threads to finish..." << endl;
+        for (int t = 0; t < desired_threads; t++) {
+            threads[t]->join();
+        }
+    } else {
+        theWorld->camera_ptr->render_scene(*theWorld, 0, 1);
     }
 
     auto render_finish_time = chrono::steady_clock::now();
