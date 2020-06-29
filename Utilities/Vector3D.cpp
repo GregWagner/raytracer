@@ -1,6 +1,6 @@
 // This file contains the definition of the class Vector3D
 
-#include <math.h>
+#include <cmath>
 
 #include "Vector3D.h"
 #include "Normal.h"
