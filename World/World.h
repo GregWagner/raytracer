@@ -25,8 +25,7 @@
 #include "../Cameras/Camera.h"
 #include "../Lights/Light.h"
 #include "../Lights/Ambient.h"
-
-class RenderWindow; 	//part of skeleton - wxRaytracer.h
+#include "../Utilities/RenderTarget.h"
 
 class World {
 	public:
@@ -40,7 +39,7 @@ class World {
 		std::vector<GeometricObject*> objects;
 		std::vector<Light*> 		lights;
 		
-		RenderWindow* 				paintArea; 	//connection to skeleton - wxRaytracer.h
+		RenderTarget* 				paintArea; 	//connection to skeleton - wxRaytracer.h
 			
 
 	public:

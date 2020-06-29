@@ -38,8 +38,6 @@
 
 #include "../build/BuildShadedObjects.cpp"
 
-#include "../ui/RenderWindow.h"
-
 // -------------------------------------------------------------------- default constructor
 
 // tracer_ptr is set to NULL because the build functions will always construct the appropriate tracer

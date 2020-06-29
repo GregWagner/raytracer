@@ -13,8 +13,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 option(USE_AVX "Enable the use of AVX Optimisations" ON)
 
-add_executable(RayTracer
-        main.cpp
+set(RAYTRACER_SRCS
         BRDFs/BRDF.cpp
         BRDFs/BRDF.h
         BRDFs/Lambertian.cpp
@@ -61,12 +60,6 @@ add_executable(RayTracer
         Tracers/SingleSphere.h
         Tracers/Tracer.cpp
         Tracers/Tracer.h
-        ui/MainWindow.cpp
-        ui/MainWindow.h
-        ui/RenderWindow.cpp
-        ui/RenderWindow.h
-        ui/RenderThread.cpp
-        ui/RenderThread.h
         Utilities/Constants.h
         Utilities/Maths.h
         Utilities/Matrix.cpp
@@ -89,7 +82,23 @@ add_executable(RayTracer
         World/ViewPlane.h
         World/World.cpp
         World/World.h
-        Cameras/ThinLens.cpp Cameras/ThinLens.h)
+        Cameras/ThinLens.cpp
+        Cameras/ThinLens.h
+        Utilities/RenderTarget.h)
+
+add_executable(RayTracer
+        main.cpp
+        ui/MainWindow.cpp
+        ui/MainWindow.h
+        ui/RenderWindow.cpp
+        ui/RenderWindow.h
+        ui/RenderThread.cpp
+        ui/RenderThread.h
+        ${RAYTRACER_SRCS}
+)
+add_executable(clitracer
+        ${RAYTRACER_SRCS}
+        cli/main.cpp cli/ImageTarget.cpp cli/ImageTarget.h)
 target_link_libraries(RayTracer Qt5::Widgets)
 
 # turn on autovectorisation.
@@ -105,17 +114,20 @@ endif()
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86|AMD64")
     if(MSVC)
         # bias the optimizer towards Intel CPUs
-        target_compile_options(RayTracer PRIVATE /favor:INTEL64)
+        #target_compile_options(RayTracer PRIVATE /favor:INTEL64)
         if(USE_AVX)
             target_compile_options(RayTracer PRIVATE /arch:AVX)
+            target_compile_options(clitracer PRIVATE /arch:AVX)
         endif()
     else()
         check_cxx_compiler_flag(-msse MSSE)
         check_cxx_compiler_flag(-msse2 MSSE2)
         target_compile_options(RayTracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
+        target_compile_options(clitracer PRIVATE $<$<BOOL:MSSE>:-msse> $<$<BOOL:MSSE2>:-msse2>)
         if(USE_AVX)
             check_cxx_compiler_flag(-mavx MAVX)
             target_compile_options(RayTracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
+            target_compile_options(clitracer PRIVATE $<$<BOOL:MAVX>:-mavx>)
         endif()
     endif()
 else()

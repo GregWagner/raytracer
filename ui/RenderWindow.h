@@ -16,8 +16,9 @@
 #include <memory>
 
 #include "../World/World.h"
+#include "../Utilities/RenderTarget.h"
 
-class RenderWindow : public QMdiSubWindow {
+class RenderWindow : public QMdiSubWindow, public RenderTarget {
 Q_OBJECT
 public:
     RenderWindow();
@@ -44,7 +45,7 @@ public:
      * @param g Green component - 0-255 range.
      * @param b Blue component - 0-255 range.
      */
-    void setPixel(int x, int y, int r, int g, int b);
+    void setPixel(int x, int y, int r, int g, int b) override;
 
     bool isRendering() const;
 
